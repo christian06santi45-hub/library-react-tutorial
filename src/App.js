@@ -6,23 +6,33 @@ import Books from "./pages/Books.jsx";
 import { books } from "./data.js";
 import BookInfo from "./pages/BookInfo.jsx";
 import Cart from "./pages/Cart.jsx";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 function App() {
   const [cart, setCart] = useState([]);
 
-  function addToCart(book) { 
-    setCart([...cart, book]);
+  function addToCart(book) {
+    setCart((prev) => [...prev, { ...book, quantity: 1 }]);
   }
-    
+
   return (
     <Router>
       <div className="App">
         <Nav />
+
         <Route path="/" exact component={Home} />
+
         <Route path="/books" exact render={() => <Books books={books} />} />
-        <Route path="/books/:id" render={() => <BookInfo books={books} addToCart={addToCart} />} />
-        <Route path="/cart" render={() => <Cart books={books} cart={cart} />} />
+
+        <Route
+          path="/books/:id"
+          render={() => (
+            <BookInfo books={books} addToCart={addToCart} cart={cart} />
+          )}
+        />
+
+        <Route path="/cart" render={() => <Cart cart={cart} />} />
+
         <Footer />
       </div>
     </Router>
