@@ -15,24 +15,34 @@ function App() {
     setCart((prev) => [...prev, { ...book, quantity: 1 }]);
   }
 
+  function changeQuantity(book, quantity) {
+    setCart(cart.map(item => item.id === book.id
+        ? {
+          ...item,
+          quantity: +quantity,
+        }
+        : item
+    ))
+  }
+
   return (
     <Router>
       <div className="App">
         <Nav />
-
         <Route path="/" exact component={Home} />
-
         <Route path="/books" exact render={() => <Books books={books} />} />
-
         <Route
           path="/books/:id"
           render={() => (
             <BookInfo books={books} addToCart={addToCart} cart={cart} />
           )}
         />
-
-        <Route path="/cart" render={() => <Cart cart={cart} />} />
-
+        <Route
+          path="/cart"
+          render={() => (
+            <Cart books={books} cart={cart} changeQuantity={changeQuantity} />
+          )}
+        />
         <Footer />
       </div>
     </Router>

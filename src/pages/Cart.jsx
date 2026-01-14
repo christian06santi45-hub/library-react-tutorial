@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Cart = ({ cart }) => {
-console.log("CART DATA", cart)
+const Cart = ({ cart, changeQuantity }) => {
+  const total = () => {
+    let price = 0;
+    cart.forEach((item) => {
+      price += +((item.salePrice || item.originalPrice) * item.quantity);
+    });
+    return price;
+  };
 
+
+  
   return (
     <div id="books__body">
       <main id="books__main">
@@ -11,19 +19,15 @@ console.log("CART DATA", cart)
             <div className="book__selected--top">
               <h2 className="cart__title">Cart</h2>
             </div>
-
             <div className="cart">
               <div className="cart__header">
                 <span className="cart__book">Book</span>
                 <span className="cart__quantity">Quantity</span>
                 <span className="cart__total">Price</span>
               </div>
-
               <div className="cart__body">
                 {cart.map((book) => {
-                  const price =
-                    book.salePrice || book.originalPrice;
-
+                  const price = book.salePrice || book.originalPrice;
                   return (
                     <div className="cart__item" key={book.id}>
                       <div className="cart__book">
@@ -39,54 +43,48 @@ console.log("CART DATA", cart)
                           <span className="cart__book--price">
                             ${price.toFixed(2)}
                           </span>
-                          <button className="cart__book--remove">
-                            Remove
-                          </button>
+                          <button className="cart__book--remove">Remove</button>
                         </div>
                       </div>
-
                       <div className="cart__quantity">
                         <input
                           type="number"
                           min={0}
                           max={99}
                           className="cart__input"
+                          value={book.quantity}
+                          onChange={(event) =>
+                            changeQuantity(book, event.target.value)
+                          }
                         />
                       </div>
-
                       <div className="cart__total">
-                        ${price.toFixed(2)}
-                      </div>
+                        ${((book.salePrice || book.originalPrice) * book.quantity).toFixed(2)}</div>
                     </div>
                   );
                 })}
               </div>
             </div>
-
             <div className="total">
               <div className="total__item total__sub--total">
                 <span>Subtotal</span>
-                <span>$0.00</span>
+                <span>${(total() * 0.9).toFixed(2)}</span>
               </div>
               <div className="total__item total__sub--tax">
                 <span>Tax</span>
-                <span>$0.00</span>
+                <span>${(total() * 0.1).toFixed(2)}</span>
               </div>
               <div className="total__item total__sub--price">
                 <span>Total</span>
-                <span>$0.00</span>
+                <span>${total().toFixed(2)}</span>
               </div>
-
               <button
                 className="btn btn__checkout no-cursor"
-                onClick={() =>
-                  alert("Haven't got around to doing this :(")
-                }
+                onClick={() => alert("Haven't got around to doing this :(")}
               >
                 Proceed to Checkout
               </button>
             </div>
-
           </div>
         </div>
       </main>
